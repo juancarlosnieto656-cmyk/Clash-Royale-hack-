@@ -1,61 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANEL DE CONTROL PREMIUM</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <meta http-equiv="refresh" content="5">
     <style>
-        :root { --gold: #d4af37; --bg: #000; }
-        body { background: var(--bg); color: var(--gold); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
-        .header { border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
-        h1 { font-size: 24px; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-        
-        /* Tabla de datos */
-        .table-container { overflow-x: auto; margin-bottom: 100px; }
-        table { width: 100%; border-collapse: collapse; background: #111; border: 1px solid var(--gold); }
-        th { background: #222; padding: 12px; font-size: 12px; border: 1px solid var(--gold); }
-        td { padding: 10px; border: 1px solid #333; font-size: 13px; text-align: center; color: #fff; }
-        
-        /* Botones y Navegación */
-        .btn-update { background: var(--gold); color: black; border: none; padding: 15px; width: 100%; font-weight: bold; border-radius: 5px; cursor: pointer; }
-        .footer-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 20px 0; border-top: 2px solid var(--gold); }
-        .icon { font-size: 24px; cursor: pointer; color: var(--gold); }
+        body { background-color: #000; color: #d4af37; font-family: sans-serif; padding: 20px; }
+        h1 { border-bottom: 1px solid #d4af37; padding-bottom: 10px; }
+        .dato { border-bottom: 1px solid #333; padding: 5px; font-size: 14px; }
+        a { color: #d4af37; text-decoration: none; display: block; margin-top: 20px; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>ADMIN SYSTEM</h1>
-        <small id="time"></small>
-    </div>
-
-    <div class="table-container">
-        <table>
-            <tr><th>USUARIO/CORREO</th><th>PASSWORD</th><th>TELÉFONO</th></tr>
-            {% for linea in datos %}
-            <tr>
-                {% set c = linea.split('|') %}
-                <td>{{ c[0] }}</td>
-                <td>••••••••</td>
-                <td>{{ c[2] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <button class="btn-update" onclick="location.reload()">ACTUALIZAR DATOS AHORA</button>
-
-    <div class="footer-nav">
-        <i class="fa-solid fa-home icon" onclick="location.href='/'" title="Inicio"></i>
-        <i class="fa-solid fa-sync icon" onclick="location.reload()" title="Recargar"></i>
-        <i class="fa-solid fa-sign-out-alt icon" onclick="location.href='/logout'" title="Salir"></i>
-    </div>
-
-    <script>
-        document.getElementById('time').innerText = new Date().toLocaleTimeString();
-    </script>
+    <h1>Panel de Datos</h1>
+    {% for linea in datos %}
+        <div class="dato">{{ linea }}</div>
+    {% endfor %}
+    <a href="/logout">Cerrar Sesión</a>
 </body>
 </html>
 
