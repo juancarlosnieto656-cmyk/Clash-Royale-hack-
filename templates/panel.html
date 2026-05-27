@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATOS EN VIVO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta http-equiv="refresh" content="5">
+    <style>
+        body { background: #050505; color: #d4af37; font-family: 'Arial', sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; text-align: center; }
+        .header { margin-bottom: 20px; border-bottom: 1px solid #d4af37; padding-bottom: 10px; }
+        h1 { font-size: 22px; letter-spacing: 2px; margin: 10px 0; }
+        .date { font-size: 11px; color: #888; }
+        table { width: 100%; border-collapse: collapse; background: #111; border: 1px solid #333; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+        th { background: #222; padding: 10px; font-size: 10px; color: #d4af37; text-transform: uppercase; }
+        td { padding: 8px; border: 1px solid #222; font-size: 11px; color: #eee; }
+        .btn-update { background: #d4af37; color: black; border: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; margin: 15px 0; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        .status { color: #00ff00; font-size: 11px; margin-top: 5px; display: block; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        .nav-item { color: #d4af37; font-size: 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DATOS EN VIVO</h1>
+        <div class="date" id="time">Cargando...</div>
+    </div>
+    <table>
+        <tr><th>CORREO</th><th>PASSWORD</th><th>TELÉFONO</th></tr>
+        {% for linea in datos %}
+        <tr>
+            {% set c = linea.split('|') %}
+            <td>{{ c[0] }}</td>
+            <td>••••••••</td>
+            <td>{{ c[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button class="btn-update" onclick="location.reload()">ACTUALIZAR DATOS</button>
+    <span class="status">● ESTADO: CONECTADO (FLASK/TERMUX)</span>
+    <div class="bottom-nav">
+        <i class="fa-solid fa-gear nav-item" onclick="alert('Configuración')"></i>
+        <i class="fa-solid fa-magnifying-glass nav-item" onclick="alert('Buscando...')"></i>
+        <i class="fa-solid fa-terminal nav-item" onclick="location.href='/'"></i>
+        <i class="fa-solid fa-user nav-item" onclick="location.href='/logout'"></i>
+    </div>
+    <script>
+        document.getElementById('time').innerText = new Date().toLocaleString();
+    </script>
+</body>
+</html>
+
