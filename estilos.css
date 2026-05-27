@@ -1,0 +1,29 @@
+body { display: flex; justify-content: center; align-items: center; height: 100vh; background-image: url('IMG-20260526-WA0000.jpg'); background-size: cover; }
+.panel-juego {
+    background: rgba(86, 64, 42, 0.9);
+    padding: 30px; /* Más espacio interno */
+    border-radius: 15px;
+    width: 90%; /* Ocupa más ancho */
+    max-width: 500px; /* Tamaño máximo ideal */
+    min-height: 400px; /* Altura mínima para que no se vea aplastado */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Más espacio entre campos */
+    color: white;
+    border: 3px solid #d4af37;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
+}
+
+.campo-input {
+    width: 100%;
+    padding: 15px; /* Más grandes los campos */
+    font-size: 16px; /* Letra más grande */
+    background: #33261a;
+    border: 1px solid #d4af37;
+    color: white;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.boton-dorado { padding: 10px; background: #d4af37; border: none; cursor: pointer; }
+
